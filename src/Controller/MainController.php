@@ -13,8 +13,9 @@ class MainController extends AbstractController
     #[Route('/', name: 'main')]
     public function index(): Response
     {
+        $data = $this->getDoctrine()->getRepository(Crud::class)->findAll();
         return $this->render('main/index.html.twig', [
-            'controller_name' => 'MainController',
+            'list' => $data,
         ]);
     }
     #[Route('/create', name: 'create')]
@@ -27,6 +28,7 @@ class MainController extends AbstractController
             $em->persist($crud);
             $em->flush();
             $this->addFlash('notice','Submitted Successfully');
+            return $this->redirectToRoute('main');
         }
         return $this->render('main/create.html.twig',[
             'form' => $form->createView()
